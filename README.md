@@ -1,52 +1,46 @@
 # Language Learning App
 
-## DB Models
-### User
-id: PK
+## Local Setup
+### Dependencies
+For dependency management we use `poetry`. 
+More on the installation if you don't have it installed yet, can be found [here](https://python-poetry.org/docs/#installation).
 
-email: str (email format, max: 256)
+After the installation you need to create a virtual environment from `backend` directory with  Python 3.10.7 and activate it. 
+You can do that using any module you prefer, poetry also proposes their envs, but that's not obligatory.
 
-background: str (HEX format)
+After the environment is activated, you need to install dependencies using `poetry`: [here's how](https://python-poetry.org/docs/cli/#install).
 
-emoji: str (max: 24)
+### Database
+We use PostgreSQL.
+To point the application to it, you need to create `.env` file in the root directory where you set your local credentials. 
 
-password: str (password hash)
+That's how the `.env` file should look like:
+```
+DB_HOST = "localhost"
+DB_PORT = "5432"
+DB_USER = "postgres"
+DB_PASS = "postgres"
+DB_NAME = "postgres"
 
-streak: int (min: 0)
+SECRET_KEY = ""
+REFRESH_SECRET_KEY = ""
+```
 
-### Lesson
-id: PK
+### Code style
+With `poetry` we also install the following code style/linting tools:
+- [black](https://black.readthedocs.io/en/stable/)
+- [flake8](https://flake8.pycqa.org/en/latest/)
+- [isort](https://pycqa.github.io/isort/)
 
-name: str (max: 1024)
+You will need to run them from the root dir before commiting your code. No specific params are required.
+```bash
+black .
+```
 
-content: str
+```bash
+flake8
+```
 
-order: int (unique, starts with 0)
-
-### Progress
-user_id: FK to User.id
-
-lesson_id: FK to Lesson.id
-
-### Exercise
-id: PK
-
-lesson_id: FK to Lesson.id
-
-type: Enum(multiple-choice/free)
-
-definition: str (max: 512)
-
-text: str (max: 2048)
-
-link: str (max: 512, optional)
-
-option_a: str (only for multiple-choice type)
-
-option_b: str (only for multiple-choice type)
-
-option_c: str (only for multiple-choice type)
-
-option_d: str (only for multiple-choice type)
-
-answers: str (max: 2048, only for free type)
+```bash
+isort .
+```
