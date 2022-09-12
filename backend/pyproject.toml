@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "ratio"
+version = "0.1.0"
+description = "Belarussian language learning app"
+authors = ["Plistachka"]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<4.0"
+fastapi = "^0.82.0"
+sqladmin = "^0.5.0"
+unittest = "^0.0"
+alembic = "^1.8.1"
+uvicorn = "^0.18.3"
+passlib = "^1.7.4"
+python-jose = "^3.3.0"
+python-json-logger = "^2.0.4"
+
+[tool.poetry.dev-dependencies]
+black = "^22.8.0"
+flake8 = "^5.0.4"
+isort = "^5.10.1"
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 88
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
