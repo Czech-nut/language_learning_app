@@ -52,6 +52,6 @@ class Exercise(Base):
     type = Column(Enum('option_a', 'option_b', 'option_c', 'option_d', name='answer_types'))
     definition = Column(String(512))
     text = Column(String(2048))
-    link = Column(String(512), optional=True)
-    answer = Column(String(2048))
+    link = Column(String(512))
+    answers = Column(String(2048))
 
