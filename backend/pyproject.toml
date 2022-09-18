@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "ratio"
+name = "lla"
 version = "0.1.0"
-description = "Belarussian language learning app"
-authors = ["Plistachka"]
+description = "Language learning app"
+authors = []
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
@@ -15,6 +15,7 @@ passlib = "^1.7.4"
 python-jose = "^3.3.0"
 python-json-logger = "^2.0.4"
 pydantic = {extras = ["dotenv"], version = "^1.10.2"}
+psycopg2-binary = "^2.9.3"
 
 [tool.poetry.dev-dependencies]
 black = "^22.8.0"

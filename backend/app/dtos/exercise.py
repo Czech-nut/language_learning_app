@@ -2,7 +2,7 @@ from enum import Enum
 
 from pydantic import Field
 
-from backend.dtos.common import BaseModel
+from app.dtos.common import BaseModel
 
 
 class ExerciseType(Enum):

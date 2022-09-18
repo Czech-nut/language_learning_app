@@ -6,8 +6,8 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.requests import Request
 
-from backend.dtos.common import InternalServerErrorResponse
-from backend.settings import Settings
+from app.dtos.common import InternalServerErrorResponse
+from app.settings import Settings
 
 settings = Settings()
 logger = logging.getLogger(__name__)

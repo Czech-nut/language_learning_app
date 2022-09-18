@@ -273,6 +273,14 @@ docs = ["furo (>=2021.7.5b38)", "proselint (>=0.10.2)", "sphinx-autodoc-typehint
 test = ["appdirs (==1.4.4)", "pytest-cov (>=2.7)", "pytest-mock (>=3.6)", "pytest (>=6)"]
 
 [[package]]
+name = "psycopg2-binary"
+version = "2.9.3"
+description = "psycopg2 - Python-PostgreSQL Database Adapter"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "pyasn1"
 version = "0.4.8"
 description = "ASN.1 types and codecs"
@@ -297,6 +305,7 @@ optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
+python-dotenv = {version = ">=0.10.4", optional = true, markers = "extra == \"dotenv\""}
 typing-extensions = ">=4.1.0"
 
 [package.extras]
@@ -310,6 +319,17 @@ description = "passive checker of Python programs"
 category = "dev"
 optional = false
 python-versions = ">=3.6"
+
+[[package]]
+name = "python-dotenv"
+version = "0.21.0"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+cli = ["click (>=5.0)"]
 
 [[package]]
 name = "python-jose"
@@ -534,7 +554,7 @@ email = ["email-validator"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "46fb2c1940794ed9e9a6070dc8201a9333efd88dc5dc40736fc68f07b5bd9edb"
+content-hash = "ab6292235074260ede0748c1552322f1e6e941bc0ee4525ff0a0332d44415a69"
 
 [metadata.files]
 alembic = []
@@ -560,10 +580,12 @@ mypy-extensions = []
 passlib = []
 pathspec = []
 platformdirs = []
+psycopg2-binary = []
 pyasn1 = []
 pycodestyle = []
 pydantic = []
 pyflakes = []
+python-dotenv = []
 python-jose = []
 python-json-logger = []
 python-multipart = []

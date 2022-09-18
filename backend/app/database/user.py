@@ -1,6 +1,6 @@
 import logging
 
-from backend.dtos.user import Avatar, UserIn, UserOut
+from app.dtos.user import Avatar, UserIn, UserOut
 
 logger = logging.getLogger(__name__)
 
