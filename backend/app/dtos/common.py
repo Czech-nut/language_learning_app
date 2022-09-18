@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import BaseModel as Model
 from pydantic import Field
 
-from backend.utils import snake_to_camel
+from app.utils import snake_to_camel
 
 
 class BaseModel(Model):

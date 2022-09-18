@@ -7,8 +7,8 @@ from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import ValidationError
 
-from backend.database.user import create_user, retrieve_user_by_email
-from backend.dtos.common import (
+from app.database.user import create_user, retrieve_user_by_email
+from app.dtos.common import (
     AuthDTO,
     ForbiddenResponse,
     NotFoundResponse,
@@ -16,9 +16,9 @@ from backend.dtos.common import (
     UnauthorisedResponse,
     ValidationErrorResponse,
 )
-from backend.dtos.user import UserIn
-from backend.exceptions import Forbidden, NotFound, Unauthorised
-from backend.services.auth import (
+from app.dtos.user import UserIn
+from app.exceptions import Forbidden, NotFound, Unauthorised
+from app.services.auth import (
     TokenSchema,
     create_access_token,
     create_refresh_token,
@@ -79,7 +79,7 @@ async def check_health():
 @app.post("/signup", tags=["Sign Up"])
 async def sign_up(user_data: UserIn):
     hashed_pass = get_hashed_password(user_data.password)
-    new_user = await create_user(user_data, hashed_pass)
+    new_user = create_user(user_data, hashed_pass)
     return SuccessResponseDTO(data=new_user)
 
 
@@ -87,7 +87,7 @@ async def sign_up(user_data: UserIn):
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
 ):
-    user_obj = await retrieve_user_by_email(form_data.username)
+    user_obj = retrieve_user_by_email(form_data.username)
     if not user_obj:
         raise Forbidden()
 

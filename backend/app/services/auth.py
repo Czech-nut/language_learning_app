@@ -7,11 +7,11 @@ from jose import jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel, ValidationError
 
-from backend.database.user import retrieve_user_by_email
-from backend.dtos.user import UserOut
-from backend.exceptions import Forbidden, Unauthorised
-from backend.settings import Settings
-from backend.utils.logging import setup_logging
+from app.database.user import retrieve_user_by_email
+from app.dtos.user import UserOut
+from app.exceptions import Forbidden, Unauthorised
+from app.settings import Settings
+from app.utils.logging import setup_logging
 
 setup_logging()
 

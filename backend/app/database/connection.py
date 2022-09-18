@@ -5,7 +5,7 @@ import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.ddl import CreateSchema
 
-from backend import settings
+from app import settings
 
 settings = settings.Settings()
 logger = logging.getLogger(__name__)

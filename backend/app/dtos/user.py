@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from backend.dtos.common import BaseModel
+from app.dtos.common import BaseModel
 
 EMAIL_REGEX = r"^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,4}$"
 HEX_REGEX = r"#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})"

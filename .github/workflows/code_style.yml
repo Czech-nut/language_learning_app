@@ -5,28 +5,60 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
+  runner-job:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     strategy:
       matrix:
-        python-version: 
+        python-version:
           - "3.10.7"
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install black==22.8.0 flake8==5.0.4 isort==5.10.1
-    - name: Checking code formatting with black
-      run: |
-        black -l 88 --check $(git ls-files '*.py')
-    - name: Analysing the code with flake8
-      run: |
-        flake8 --max-line-length=88 --count $(git ls-files '*.py')
-    - name: Checking imports
-      run: |
-        isort $(git ls-files '*.py') -c
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install "poetry==1.1.13"
+          poetry install
+      - name: Checking code formatting with black
+        run: |
+          poetry run black -l 88 --check $(git ls-files '*.py')
+      - name: Analysing the code with flake8
+        run: |
+          poetry run flake8 --max-line-length=88 --count $(git ls-files '*.py')
+      - name: Checking imports
+        run: |
+          poetry run isort $(git ls-files '*.py') -c
+      - name: Tests
+        run: |
+          export PYTHONPATH=.
+          poetry run alembic upgrade head
+          poetry run pytest
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASS: postgres
+          DB_NAME: postgres
+          SECRET_KEY: 123456
+          REFRESH_SECRET_KEY: 123456

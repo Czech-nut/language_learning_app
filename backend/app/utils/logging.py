@@ -3,7 +3,7 @@ import sys
 
 from pythonjsonlogger import jsonlogger
 
-from backend.middleware import get_request_id
+from app.middleware import get_request_id
 
 
 class AppFilter(logging.Filter):
