@@ -1,3 +1,5 @@
+from psycopg2.errorcodes import UNIQUE_VIOLATION
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import ObjectDeletedError
 
 from app.database.models import Lesson, Progress, User
@@ -120,4 +122,33 @@ class TestModels:
         """
         Lessons should have unique order number.
         """
-        pass
+
+        lesson1 = Lesson(
+            name=faker.name(),
+            content=faker.text(),
+            preview=faker.url(),
+            order=1,
+        )
+        db_session.add(lesson1)
+        db_session.commit()
+        db_session.refresh(lesson1)
+
+        try:
+            lesson2 = Lesson(
+                name=faker.name(),
+                content=faker.text(),
+                preview=faker.url(),
+                order=1,
+            )
+
+            db_session.add(lesson2)
+            db_session.commit()
+            db_session.refresh(lesson2)
+
+            assert lesson2
+
+        except IntegrityError:
+            return 0
+
+        except UNIQUE_VIOLATION:
+            return 0
