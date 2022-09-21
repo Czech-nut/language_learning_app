@@ -1,8 +1,7 @@
-from psycopg2.errorcodes import UNIQUE_VIOLATION
+import pytest
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm.exc import ObjectDeletedError
 
-from app.database.models import Lesson, Progress, User
+from app.database.models import Lesson, Progress
 from tests import faker
 
 
@@ -23,23 +22,10 @@ class TestModels:
         )
         assert not deleted_lesson
 
-    def test_progress_cascade_deleted_for_lesson(self, db_session):
+    def test_progress_cascade_deleted_for_lesson(self, db_session, user):
         """
         Progress records should be deleted if their lesson object was deleted.
         """
-
-        user = User(
-            id=1,
-            email=faker.email(),
-            background=faker.color(),
-            emoji=faker.color(),
-            password=faker.password(),
-            streak=1,
-        )
-
-        db_session.add(user),
-        db_session.commit(),
-        db_session.refresh(user)
 
         lesson = Lesson(
             name=faker.name(),
@@ -64,29 +50,17 @@ class TestModels:
         db_session.delete(lesson)
         db_session.commit()
 
-        try:
-            assert not progress.lesson_id
-        except ObjectDeletedError:
-            db_session.delete(user)
-            db_session.commit()
-            return 0
+        lesson_progress = (
+            db_session.query(Progress).filter(Progress.lesson_id == lesson.id).all()
+        )
+        assert not lesson_progress
 
-    def test_progress_cascade_deleted_for_user(self, db_session):
+        db_session.delete(user)
+
+    def test_progress_cascade_deleted_for_user(self, db_session, user):
         """
         Progress records should be deleted if their user object was deleted.
         """
-        user = User(
-            id=1,
-            email=faker.email(),
-            background=faker.color(),
-            emoji=faker.color(),
-            password=faker.password(),
-            streak=1,
-        )
-
-        db_session.add(user),
-        db_session.commit(),
-        db_session.refresh(user)
 
         lesson = Lesson(
             name=faker.name(),
@@ -111,29 +85,29 @@ class TestModels:
         db_session.delete(user)
         db_session.commit()
 
-        try:
-            assert not progress.lesson_id
-        except ObjectDeletedError:
-            db_session.delete(lesson)
-            db_session.commit()
-            return 0
+        lesson_progress = (
+            db_session.query(Progress).filter(Progress.lesson_id == lesson.id).all()
+        )
+        assert not lesson_progress
+
+        db_session.delete(lesson)
 
     def test_lesson_order_unique(self, db_session):
         """
         Lessons should have unique order number.
         """
 
-        lesson1 = Lesson(
-            name=faker.name(),
-            content=faker.text(),
-            preview=faker.url(),
-            order=1,
-        )
-        db_session.add(lesson1)
-        db_session.commit()
-        db_session.refresh(lesson1)
+        with pytest.raises(IntegrityError):
+            lesson1 = Lesson(
+                name=faker.name(),
+                content=faker.text(),
+                preview=faker.url(),
+                order=1,
+            )
+            db_session.add(lesson1)
+            db_session.commit()
+            db_session.refresh(lesson1)
 
-        try:
             lesson2 = Lesson(
                 name=faker.name(),
                 content=faker.text(),
@@ -144,11 +118,3 @@ class TestModels:
             db_session.add(lesson2)
             db_session.commit()
             db_session.refresh(lesson2)
-
-            assert lesson2
-
-        except IntegrityError:
-            return 0
-
-        except UNIQUE_VIOLATION:
-            return 0

@@ -2,7 +2,7 @@ import pytest as pytest
 from fastapi.testclient import TestClient
 
 from app.app import app
-from app.database.models import Exercise, Lesson
+from app.database.models import Exercise, Lesson, User
 from app.dtos.exercise import ExerciseType
 from app.settings import Settings
 from tests import db, faker
@@ -56,4 +56,24 @@ def lesson_with_exercise(db_session):
     yield lesson
     db_session.delete(exercise)
     db_session.delete(lesson)
+    db_session.commit()
+
+
+@pytest.fixture(scope="function")
+def user(db_session):
+    user = User(
+        id=1,
+        email=faker.email(),
+        background=faker.color(),
+        emoji=faker.color(),
+        password=faker.password(),
+        streak=1,
+    )
+
+    db_session.add(user),
+    db_session.commit(),
+    db_session.refresh(user)
+
+    yield user
+    db_session.delete(user)
     db_session.commit()
