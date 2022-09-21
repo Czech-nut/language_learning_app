@@ -32,7 +32,7 @@ class TestModels:
             background=faker.color(),
             emoji=faker.color(),
             password=faker.password(),
-            streak=1
+            streak=1,
         )
 
         db_session.add(user),
@@ -79,7 +79,7 @@ class TestModels:
             background=faker.color(),
             emoji=faker.color(),
             password=faker.password(),
-            streak=1
+            streak=1,
         )
 
         db_session.add(user),
@@ -131,7 +131,7 @@ class TestModels:
         db_session.commit()
         db_session.refresh(lesson1)
 
-        is_order_unique1 = lesson1.__table__.columns.get('order')
+        is_order_unique1 = lesson1.__table__.columns.get("order")
 
         assert is_order_unique1
 
@@ -145,11 +145,10 @@ class TestModels:
         db_session.commit()
         db_session.refresh(lesson2)
 
-        is_order_unique2 = lesson2.__table__.columns.get('order')
+        is_order_unique2 = lesson2.__table__.columns.get("order")
 
         assert not is_order_unique2
 
         db_session.delete(lesson1)
         db_session.delete(lesson2)
         db_session.commit()
-
