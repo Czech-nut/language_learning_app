@@ -55,8 +55,6 @@ class TestModels:
         )
         assert not lesson_progress
 
-        db_session.delete(user)
-
     def test_progress_cascade_deleted_for_user(self, db_session, user):
         """
         Progress records should be deleted if their user object was deleted.

@@ -70,9 +70,8 @@ def user(db_session):
         streak=1,
     )
 
-    db_session.add(user),
-    db_session.commit(),
-    db_session.refresh(user)
+    db_session.add(user)
+    db_session.commit()
 
     yield user
     db_session.delete(user)
