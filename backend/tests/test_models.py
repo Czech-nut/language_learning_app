@@ -97,17 +97,16 @@ class TestModels:
         Lessons should have unique order number.
         """
 
-        with pytest.raises(IntegrityError):
-            lesson1 = Lesson(
-                name=faker.name(),
-                content=faker.text(),
-                preview=faker.url(),
-                order=1,
-            )
-            db_session.add(lesson1)
-            db_session.commit()
-            db_session.refresh(lesson1)
+        lesson1 = Lesson(
+            name=faker.name(),
+            content=faker.text(),
+            preview=faker.url(),
+            order=1,
+        )
+        db_session.add(lesson1)
+        db_session.commit()
 
+        with pytest.raises(IntegrityError):
             lesson2 = Lesson(
                 name=faker.name(),
                 content=faker.text(),
@@ -117,4 +116,3 @@ class TestModels:
 
             db_session.add(lesson2)
             db_session.commit()
-            db_session.refresh(lesson2)
