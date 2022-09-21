@@ -120,35 +120,4 @@ class TestModels:
         """
         Lessons should have unique order number.
         """
-
-        lesson1 = Lesson(
-            name=faker.name(),
-            content=faker.text(),
-            preview=faker.url(),
-            order=1,
-        )
-        db_session.add(lesson1)
-        db_session.commit()
-        db_session.refresh(lesson1)
-
-        is_order_unique1 = lesson1.__table__.columns.get("order")
-
-        assert is_order_unique1
-
-        lesson2 = Lesson(
-            name=faker.name(),
-            content=faker.text(),
-            preview=faker.url(),
-            order=1,
-        )
-        db_session.add(lesson2)
-        db_session.commit()
-        db_session.refresh(lesson2)
-
-        is_order_unique2 = lesson2.__table__.columns.get("order")
-
-        assert not is_order_unique2
-
-        db_session.delete(lesson1)
-        db_session.delete(lesson2)
-        db_session.commit()
+        pass
