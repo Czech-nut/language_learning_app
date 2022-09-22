@@ -76,3 +76,20 @@ def user(db_session):
     yield user
     db_session.delete(user)
     db_session.commit()
+
+
+@pytest.fixture(scope="function")
+def lesson(db_session):
+    lesson = Lesson(
+        name=faker.name(),
+        content=faker.text(),
+        preview=faker.url(),
+        order=0,
+    )
+
+    db_session.add(lesson)
+    db_session.commit()
+
+    yield lesson
+    db_session.delete(lesson)
+    db_session.commit()

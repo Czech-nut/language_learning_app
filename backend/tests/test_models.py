@@ -1,7 +1,8 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from app.database.models import Lesson, Progress
+from app.database.models import Exercise, Lesson, Progress
+from app.dtos.exercise import ExerciseType
 from tests import faker
 
 
@@ -94,23 +95,72 @@ class TestModels:
         """
         Lessons should have unique order number.
         """
-
-        lesson1 = Lesson(
+        lesson_1 = Lesson(
             name=faker.name(),
             content=faker.text(),
             preview=faker.url(),
-            order=1,
+            order=0,
         )
-        db_session.add(lesson1)
+        db_session.add(lesson_1)
         db_session.commit()
 
+        lesson_2 = Lesson(
+            name=faker.name(),
+            content=faker.text(),
+            preview=faker.url(),
+            order=lesson_1.order,
+        )
+        db_session.add(lesson_2)
         with pytest.raises(IntegrityError):
-            lesson2 = Lesson(
-                name=faker.name(),
-                content=faker.text(),
-                preview=faker.url(),
-                order=1,
-            )
-
-            db_session.add(lesson2)
             db_session.commit()
+
+        db_session.rollback()
+        db_session.delete(lesson_1)
+        db_session.commit()
+
+    def test_answer_field_constreint(self, lesson, db_session):
+        """
+        For field answers field type have to by FREE
+        """
+
+        exercise = Exercise(
+            lesson_id=lesson.id,
+            type=ExerciseType.MULTIPLE_CHOICE.value,
+            definition=faker.name(),
+            text=faker.text(),
+            link=faker.url(),
+            answers=faker.first_name(),
+        )
+        db_session.add(exercise)
+
+        with pytest.raises(IntegrityError):
+            db_session.commit()
+
+        db_session.rollback()
+        db_session.delete(lesson)
+        db_session.commit()
+
+    def test_option_fields_constreint(self, lesson, db_session):
+        """
+        Field type have to by MULTIPLE_CHOICE for fields option_a and option_b
+        """
+
+        exercise = Exercise(
+            lesson_id=lesson.id,
+            type=ExerciseType.FREE.value,
+            definition=faker.name(),
+            text=faker.text(),
+            link=faker.url(),
+            option_a=faker.first_name(),
+            option_b=faker.first_name(),
+            option_c=faker.first_name(),
+            option_d=faker.first_name(),
+        )
+        db_session.add(exercise)
+
+        with pytest.raises(IntegrityError):
+            db_session.commit()
+
+        db_session.rollback()
+        db_session.delete(lesson)
+        db_session.commit()
