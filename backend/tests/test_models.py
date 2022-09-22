@@ -118,7 +118,7 @@ class TestModels:
         db_session.delete(lesson_1)
         db_session.commit()
 
-    def test_answer_field_constreint(self, lesson, db_session):
+    def test_incorrect_answer_field_constraint(self, lesson, db_session):
         """
         For field answers field type have to by FREE
         """
@@ -140,7 +140,7 @@ class TestModels:
         db_session.delete(lesson)
         db_session.commit()
 
-    def test_option_fields_constreint(self, lesson, db_session):
+    def test_incorrect_option_fields_constraint(self, lesson, db_session):
         """
         Field type have to by MULTIPLE_CHOICE for fields option_a and option_b
         """
@@ -155,6 +155,102 @@ class TestModels:
             option_b=faker.first_name(),
             option_c=faker.first_name(),
             option_d=faker.first_name(),
+        )
+        db_session.add(exercise)
+
+        with pytest.raises(IntegrityError):
+            db_session.commit()
+
+        db_session.rollback()
+        db_session.delete(lesson)
+        db_session.commit()
+
+    def test_correct_answer_field_constraint(self, lesson_with_exercise, db_session):
+        """
+        Field answers have to br created with type FREE
+        """
+
+        db_session.add(lesson_with_exercise)
+        db_session.commit()
+
+        type_field = (
+            db_session.query(Exercise).filter(Lesson.id == Exercise.lesson_id).all()
+        )
+
+        type_field_value = type_field[0].type
+
+        assert type_field_value == "free"
+
+        db_session.delete(lesson_with_exercise)
+        db_session.commit()
+
+    def test_correct_option_field_constraint(self, lesson, db_session):
+        """
+        Option fields have to br created with type MULTIPLE_CHOICE
+        """
+
+        exercise = Exercise(
+            lesson_id=lesson.id,
+            type=ExerciseType.MULTIPLE_CHOICE.value,
+            definition=faker.name(),
+            text=faker.text(),
+            link=faker.url(),
+            option_a=faker.first_name(),
+            option_b=faker.first_name(),
+            option_c=faker.first_name(),
+            option_d=faker.first_name(),
+        )
+        db_session.add(exercise)
+        db_session.commit()
+
+        type_field = (
+            db_session.query(Exercise).filter(Lesson.id == exercise.lesson_id).all()
+        )
+
+        type_field_value = type_field[0].type
+
+        assert type_field_value == "multiple-choice"
+
+        db_session.delete(exercise)
+        db_session.commit()
+
+    def test_create_exercise_without_answer_and_option_fields(self, lesson, db_session):
+        """
+        It is impossible to create exercise without answer and options fields
+        """
+
+        exercise = Exercise(
+            lesson_id=lesson.id,
+            type=ExerciseType.MULTIPLE_CHOICE.value,
+            definition=faker.name(),
+            text=faker.text(),
+            link=faker.url(),
+        )
+        db_session.add(exercise)
+
+        with pytest.raises(IntegrityError):
+            db_session.commit()
+
+        db_session.rollback()
+        db_session.delete(lesson)
+        db_session.commit()
+
+    def test_type_field_value(self, lesson, db_session):
+        """
+        Field type has only two options: free and multiple-choice
+        """
+
+        exercise = Exercise(
+            lesson_id=lesson.id,
+            type="different_meaning",
+            definition=faker.name(),
+            text=faker.text(),
+            link=faker.url(),
+            option_a=faker.first_name(),
+            option_b=faker.first_name(),
+            option_c=faker.first_name(),
+            option_d=faker.first_name(),
+            answers=faker.first_name(),
         )
         db_session.add(exercise)
 
