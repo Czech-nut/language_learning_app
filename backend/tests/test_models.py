@@ -167,7 +167,7 @@ class TestModels:
 
     def test_correct_answer_field_constraint(self, lesson_with_exercise, db_session):
         """
-        Field answers have to br created with type FREE
+        Field answers have to bе created with type FREE
         """
 
         db_session.add(lesson_with_exercise)
@@ -186,7 +186,7 @@ class TestModels:
 
     def test_correct_option_field_constraint(self, lesson, db_session):
         """
-        Option fields have to br created with type MULTIPLE_CHOICE
+        Option fields have to bе created with type MULTIPLE_CHOICE
         """
 
         exercise = Exercise(
